@@ -16,6 +16,9 @@ jobs:
         run: rustup update stable && rustup default stable
       - run: rustc --version
       - name: Build
-        run: cargo build --release --verbose
+        run: cargo build --release
       - name: Test
-        run: cargo test --verbose
+        run: cargo test
+      - run: cp target/release/vpn-killswitch .
+      - name: Build docker image
+        run: docker build -t vpn-killswitch .
