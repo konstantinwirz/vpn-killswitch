@@ -1,0 +1,21 @@
+name: ci
+
+on:
+  - push
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Rust toolchain
+        run: rustup update stable && rustup default stable
+      - run: rustc --version
+      - name: Build
+        run: cargo build --release --verbose
+      - name: Test
+        run: cargo test --verbose
