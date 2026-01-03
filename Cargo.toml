@@ -6,7 +6,7 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.100"
 axum = { version = "0.8.8", features = ["json", "tokio"] }
-clap = { version = "4.5.53", features = ["derive"] }
+clap = { version = "4.5.53", features = ["derive", "env"] }
 env_logger = { version = "0.11.8", features = ["auto-color", "color", "humantime"] }
 log = "0.4.29"
 reqwest = { version = "0.12.28", features = ["json"] }
