@@ -5,20 +5,29 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # Disable incremental compilation for faster from-scratch builds
+  CARGO_INCREMENTAL: 0
+  CARGO_PROFILE_TEST_DEBUG: 0
 
 jobs:
   build:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest-arm64
 
     steps:
       - uses: actions/checkout@v6
       - name: Install Rust toolchain
         run: rustup update stable && rustup default stable
       - run: rustc --version
-      - name: Build
-        run: cargo build --release
-      - name: Test
-        run: cargo test
-      - run: cp target/release/vpn-killswitch .
-      - name: Build docker image
-        run: docker build -t vpn-killswitch .
+      - uses: Swatinem/rust-cache@v2
+      - name: Build and test
+        run: |
+          cargo check --locked
+          cargo test --locked
+          cargo build --release
+      - name: Build and publish docker image
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          cp target/release/vpn-killswitch .
+          docker build -t kitov/vpn-killswitch:${{ github.ref_name }} .
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u kitov --password-stdin
+          docker push kitov/vpn-killswitch:${{ github.ref_name }}
