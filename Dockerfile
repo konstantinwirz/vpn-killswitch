@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY vpn-killswitch ./vpn-killswitch
 
-RUN sudo apt update && sudo apt install ca-certificates -y
+RUN apt update && apt install ca-certificates -y && apt clean && apt autoclean
 
-EXPOSE 8080
 ENTRYPOINT ["./vpn-killswitch"]
