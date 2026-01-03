@@ -30,16 +30,16 @@ where
 #[derive(Parser)]
 struct Cli {
     /// API token for the ipinfo.io API
-    #[arg(short = 't', long, value_name = "API-TOKEN")]
+    #[arg(short = 't', long, value_name = "API-TOKEN", env = "IPINFO_API_TOKEN")]
     api_token: String,
     /// ASN of the VPN provider
-    #[arg(short, long, value_name = "ASN")]
+    #[arg(short, long, value_name = "ASN", env = "VPN_PROVIDER_ASN")]
     asn: String,
     /// Log level (Error, Warn, Info, Debug, Trace)
-    #[arg(short, long, default_value = "Info", value_name = "LOG-LEVEL")]
+    #[arg(short, long, default_value = "Info", value_name = "LOG-LEVEL", env = "VPN_KILLSWITCH_LOG_LEVEL")]
     log_level: log::Level,
     /// HTTP port
-    #[arg(short = 'p', long, default_value = "8080", value_name = "HTTP-PORT")]
+    #[arg(short = 'p', long, default_value = "8080", value_name = "HTTP-PORT", env = "VPN_KILLSWITCH_HTTP_PORT")]
     http_port: u16,
 }
 
