@@ -10,6 +10,9 @@ use tokio::sync::{mpsc, Mutex};
 mod ipinfo;
 use crate::ipinfo::{IpInfo, IpInfoFetcher};
 
+mod public_ip;
+mod ip2asn;
+
 struct KillSwitchState<F>
 where
     F: Fn(&IpInfo) -> bool,
