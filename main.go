@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+const minPollInterval = 5
+
 var httpPort int
 var asn string
 var logLevel string
@@ -91,6 +93,9 @@ func main() {
 			// supposing the interval is being constant which it is if calling as k8s readiness/health endpoint
 			// tries to get new data 1 second before it's going to be called
 			pollInterval := int64(lastServed.Sub(lastUpdated).Seconds()) - 1
+			if pollInterval < minPollInterval {
+				pollInterval = minPollInterval
+			}
 			slog.Info("sleeping before fetching public ip...", "duration", pollInterval)
 			time.Sleep(time.Duration(pollInterval) * time.Second)
 		}
