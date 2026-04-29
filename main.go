@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const minPollInterval = 5
+const sleepDuration = 5
 
 var httpPort int
 var asn string
@@ -79,7 +79,6 @@ func main() {
 	go func() {
 		for {
 			resp, err := LookupWithRandomProvider(maxAttempts)
-			lastUpdated := time.Now()
 			if err != nil {
 				errChan <- err
 				continue
@@ -87,17 +86,9 @@ func main() {
 
 			asnChan <- resp.ASN
 			<-killswitchServed
-			lastServed := time.Now()
 
-			// adapts itslef to the polling interval
-			// supposing the interval is being constant which it is if calling as k8s readiness/health endpoint
-			// tries to get new data 1 second before it's going to be called
-			pollInterval := int64(lastServed.Sub(lastUpdated).Seconds()) - 1
-			if pollInterval < minPollInterval {
-				pollInterval = minPollInterval
-			}
-			slog.Info("sleeping before fetching public ip...", "duration", pollInterval)
-			time.Sleep(time.Duration(pollInterval) * time.Second)
+			slog.Debug("sleeping before fetching public ip...", "durationSeconds", sleepDuration)
+			time.Sleep(sleepDuration * time.Second)
 		}
 	}()
 
