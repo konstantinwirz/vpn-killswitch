@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 	"sync"
-	"time"
 )
 
 const sleepDuration = 5
@@ -45,8 +44,8 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
-	asnChan := make(chan string)
-	errChan := make(chan error)
+	asnChan := make(chan string, 2)
+	errChan := make(chan error, 2)
 	killswitchServed := make(chan struct{})
 
 	http.HandleFunc("GET /killswitch", func(w http.ResponseWriter, r *http.Request) {
@@ -86,9 +85,6 @@ func main() {
 
 			asnChan <- resp.ASN
 			<-killswitchServed
-
-			slog.Debug("sleeping before fetching public ip...", "durationSeconds", sleepDuration)
-			time.Sleep(sleepDuration * time.Second)
 		}
 	}()
 
