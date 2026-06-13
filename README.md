@@ -1,9 +1,7 @@
 # vpn-killswitch
 
-## Environment Variables
 
-The following environment variables can be used to configure the application:
-
-- `VPN_PROVIDER_ASN` - Required. ASN (Autonomous System Number) of your VPN provider.
-- `VPN_KILLSWITCH_LOG_LEVEL` - Optional. Log level (Error, Warn, Info, Debug). Defaults to "Info".
-- `VPN_KILLSWITCH_HTTP_PORT` - Optional. HTTP port for the service to listen on. Defaults to 8080.
+Starts application on port `8080` with a polling interval of 20 seconds. Provides a http endpoint `localhost:8080/` which responds with `200` if the ASN of the current internet tporvider is `3320`, otherwise responds with `503`.
+```shell
+vpn-killswitch --port 8080 --poll-interval 20 --log-level debug --asn 3320
+```
