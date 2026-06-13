@@ -53,7 +53,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let state = Arc::new(RwLock::new(AppState::with_expected_asn(args.asn)));
 
     let app = Router::new()
-        .route("/", get(health))
+        .route("/killswitch", get(health))
         .with_state(Arc::clone(&state));
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", args.port)).await?;
 
